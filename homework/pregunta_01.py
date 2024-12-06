@@ -4,9 +4,46 @@
 """
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
+import pandas as pd
+import os
 
 
 def pregunta_01():
+    #La idea es crear un dataframe y unir los archivos
+    #segun su sentimiento
+
+    #crear el dataframe
+    data_tren = pd.DataFrame(columns=['phrase', 'target'])
+    sentimientos=['positive', 'negative', 'neutral']
+    for sentimiento in sentimientos:
+        #leer los archivos
+        directorio="input/train/"+sentimiento
+        # Listar archivos y carpetas
+        for nombre in os.listdir(directorio):
+            ruta_completa = os.path.join(directorio, nombre)
+            with open(ruta_completa) as f:
+                text = f.read()
+                data_tren = pd.concat([data_tren, pd.DataFrame({'phrase': [text], 'target': [sentimiento]})], ignore_index=True)
+            
+    #guardar el dataframe
+    data_tren.to_csv('files/output/train_dataset.csv', index=False)
+
+    #crear el dataframe
+    data_test = pd.DataFrame(columns=['phrase', 'target'])
+    sentimientos=['positive', 'negative', 'neutral']
+    for sentimiento in sentimientos:
+        #leer los archivos
+        directorio="input/test/"+sentimiento
+        # Listar archivos y carpetas
+        for nombre in os.listdir(directorio):
+            ruta_completa = os.path.join(directorio, nombre)
+            with open(ruta_completa) as f:
+                text = f.read()
+                data_test = pd.concat([data_test, pd.DataFrame({'phrase': [text], 'target': [sentimiento]})], ignore_index=True)
+            
+    #guardar el dataframe
+    data_test.to_csv('files/output/test_dataset.csv', index=False)
+
     """
     La información requerida para este laboratio esta almacenada en el
     archivo "files/input.zip" ubicado en la carpeta raíz.
@@ -71,3 +108,4 @@ def pregunta_01():
 
 
     """
+pregunta_01()
